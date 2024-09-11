@@ -134,7 +134,7 @@ const JournalRecord: React.FC<JournalRecordProps> = ({ owner, title, message }) 
         <p className="text-gray-300">{message}</p>
       </div>
       <div className="border-t border-gray-600 pt-4">
-        <p className="text-sm text-gray-400">Owner: {owner}</p>
+        <p className="text-sm text-gray-400">Onchain Address: {owner}</p>
       </div>
     </div>
   );
