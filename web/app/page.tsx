@@ -102,15 +102,21 @@ if(!publicKey){
 }
 
   return <div>
-    <div className="space-y-6">
+    {/* <div className="space-y-6 h-[90vh] overflow-auto"> */}
+    <div className="h-[90vh] flex justify-center">
+      <div className='w-3/4 pt-2  space-y-6 overflow-auto'>
+      {allJournals.length==0 && <div className='w-full h-full flex justify-center pt-24'>
+        <p className='text-xl font-medium'>You have no Journal Records On-Chain. Create a Record at the dscvr blink first:  </p>
+        </div>}
       {allJournals.map((journal:any, index) => (
         <JournalRecord
-          key={index}
-          owner={journal.publicKey}
-          title={journal.title}
-          message={journal.message}
+        key={index}
+        owner={journal.publicKey}
+        title={journal.title}
+        message={journal.message}
         />
       ))}
+      </div>
     </div>
 
   </div>
@@ -126,14 +132,14 @@ interface JournalRecordProps {
 
 const JournalRecord: React.FC<JournalRecordProps> = ({ owner, title, message }) => {
   return (
-    <div className="max-w-xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-      <div className="mb-4">
-        <h2 className="text-xl font-bold text-teal-400">{title}</h2>
+    <div className="max-w-xl mx-auto px-6 p-4 bg-gray-800 rounded-lg border border-slate-500 hover:border-slate-400 shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <div className="mb-2">
+        <h2 className="text-xl font-semibold text-teal-400">{title}</h2>
       </div>
-      <div className="mb-6">
+      <div className="mb-4">
         <p className="text-gray-300">{message}</p>
       </div>
-      <div className="border-t border-gray-600 pt-4">
+      <div className="border-t border-gray-600 pt-2">
         <p className="text-sm text-gray-400">Onchain Address: {owner}</p>
       </div>
     </div>

@@ -3,7 +3,7 @@ import React from 'react'
 
 const Navbar = () => {
   return (
-    <nav className="bg-gray-900 text-white shadow-md">
+    <nav className="bg-gray-900 text-white shadow-md h-[10vh]">
       <div className="container mx-auto flex items-center justify-between px-4 py-2">
         {/* Website Name */}
         <div className="text-2xl font-semibold">

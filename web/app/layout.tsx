@@ -10,6 +10,7 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
 import Navbar from '@/components/Navbar';
 import "@solana/wallet-adapter-react-ui/styles.css";
+import Head from 'next/head';
 
 // export const metadata = {
 //   title: 'dapp0',
@@ -31,13 +32,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <ReactQueryProvider>
-          <ClusterProvider>
-            <SolanaProvider>
-              <UiLayout links={links}>{children}</UiLayout>
-            </SolanaProvider>
-          </ClusterProvider>
-        </ReactQueryProvider> */}
+        <Head>
+        <meta name="dscvr:canvas:version" content="vNext" />
+        <meta
+          name="og:image"
+          content="https://my-canvas.com/preview-image.png"
+        />
+      </Head>
+      <head>
+        <meta name="dscvr:canvas:version" content="vNext" />
+        <meta
+          name="og:image"
+          content="https://my-canvas.com/preview-image.png"
+        />
+      </head>
         <ConnectionProvider endpoint={endpoint}>
           <WalletProvider wallets={[]} autoConnect>
             <WalletModalProvider>
