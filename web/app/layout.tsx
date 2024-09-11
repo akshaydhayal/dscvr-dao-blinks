@@ -1,9 +1,9 @@
 "use client";
 
 import './global.css';
-import { UiLayout } from '@/components/ui/ui-layout';
-import { ClusterProvider } from '@/components/cluster/cluster-data-access';
-import { SolanaProvider } from '@/components/solana/solana-provider';
+// import { UiLayout } from '@/components/ui/ui-layout';
+// import { ClusterProvider } from '@/components/cluster/cluster-data-access';
+// import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ReactQueryProvider } from './react-query-provider';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
@@ -39,7 +39,7 @@ export default function RootLayout({
           </ClusterProvider>
         </ReactQueryProvider> */}
         <ConnectionProvider endpoint={endpoint}>
-          <WalletProvider wallets={[]}>
+          <WalletProvider wallets={[]} autoConnect>
             <WalletModalProvider>
               <Navbar/>
               {children}
