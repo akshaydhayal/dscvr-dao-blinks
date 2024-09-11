@@ -6,6 +6,7 @@ import {
 import {
   clusterApiUrl,
   Connection,
+  Keypair,
   PublicKey,
   Transaction,
 } from '@solana/web3.js';
@@ -16,21 +17,25 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 // import { createAsset } from './createAsset';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
+import { AnchorProvider, Program } from '@coral-xyz/anchor';
+import journalIDL from "../../../../anchor/target/idl/journal.json"
+import type {Journal} from "../../../../anchor/target/types/journal"
+import { walletSecret } from './wallet';
 
 export async function GET(request: Request) {
   const response: ActionGetResponse = {
-    title: 'Add a Journal Record on-record',
+    title: 'Log Your Daily Journals On-Chain with Solana',
     icon: 'https://s3.coinmarketcap.com/static-gravity/image/5cc0b99a8dd84fbfa4e150d84b5531f2.png',
     // icon: new URL(request.url).origin + '/nft2.png',
-    description: `Create a jounal record on record on solana and earn nft on 5 journals`,
+    description: `Easily record your daily thoughts with our on-chain journaling platform on Solana. Each entry is securely stored and maintained on the blockchain, ensuring your records are durable and transparent.`,
     label: 'BLINK',
 
     links: {
       actions: [
         {
           label: 'Enter Journal Details',
-          href: request.url + '?title=title&message=message',
+          href: request.url + '?title={title}&message={message}',
           parameters: [
             {
               name: 'title',
@@ -54,37 +59,41 @@ export const OPTIONS = GET;
 
 
 export async function POST(request: Request) {
-  const connection = new Connection(clusterApiUrl('devnet'));
+  const connection = new Connection(clusterApiUrl('devnet'),"confirmed");
   // const {wallet} =useWallet();
   const reqBody = await request.json();
-  console.log(reqBody);
-  // console.log(reqBody.data.selected_option);
-  // const selected_options=reqBody.data.selected_option;
-  // let correctAns=0;
-  // if(selected_options[0]=='b') correctAns++;
-  // if(selected_options[1]=='a') correctAns++;
-  // if(selected_options[2]=='c') correctAns++;
+  console.log('reqBody: ',reqBody);
+  const title=new URL(request.url).searchParams.get("title")
+  const message=new URL(request.url).searchParams.get("message")
 
-  // let msg;
-  // if(correctAns>=1){
-  //   msg ='Wooh! You scored ' +correctAns +'/3 Questions correctly. You have recieved the NFT in your wallet';
-  // }else{
-  //   msg="Oops! You scored 0/3 Questions correctly. You need atleast 1 question right to get the NFT. You can re-attempt the quiz.";
-  // }
+  // const wallet=useAnchorWallet();
+  const wallet=Keypair.fromSecretKey(Uint8Array.from(walletSecret));
+  const provider=new AnchorProvider(connection,wallet,{});
+  const programId=new PublicKey("G6oJmwpPf4mdsLrsiMQiUppEPXWjjpP46R7igqVoiiDb")
+  const program=new Program(journalIDL as Journal,provider);
+  const tx=await program.methods.intialiseJournal(title,message).accounts({
+    user:reqBody.account
+  }).transaction();
+  tx.recentBlockhash=(await connection.getLatestBlockhash()).blockhash;
+  tx.lastValidBlockHeight=(await connection.getLatestBlockhash()).lastValidBlockHeight;
+  tx.feePayer=new PublicKey(reqBody.account);
+  console.log('tx : ',tx);
+  let serialisedTx=tx.serialize({requireAllSignatures:false,verifySignatures:false});
 
-  const emptyTx=new Transaction();
-  emptyTx.feePayer=new PublicKey(reqBody.account);
-  emptyTx.recentBlockhash=(await connection.getLatestBlockhash()).blockhash;
-  const serialisedEmptyTx=emptyTx.serialize({requireAllSignatures:false,verifySignatures:false}).toString("base64");
+  // const emptyTx=new Transaction();
+  // emptyTx.feePayer=new PublicKey(reqBody.account);
+  // emptyTx.recentBlockhash=(await connection.getLatestBlockhash()).blockhash;
+  // const serialisedEmptyTx=emptyTx.serialize({requireAllSignatures:false,verifySignatures:false}).toString("base64");
   
-  let serialisedTx;
-  if(correctAns>=1){
-    serialisedTx=await createAsset(reqBody.account,correctAns);
-  }
+  // let serialisedTx;
+  // if(correctAns>=1){
+  //   serialisedTx=await createAsset(reqBody.account,correctAns);
+  // }
   const response: ActionPostResponse = {
     // transaction: Buffer.from(serialisedTx??"").toString("base64"),
-    transaction:(correctAns >= 1)? Buffer.from(serialisedTx ?? '').toString('base64') : serialisedEmptyTx,
-    message: msg,
+    // transaction:(correctAns >= 1)? Buffer.from(serialisedTx ?? '').toString('base64') : serialisedEmptyTx,
+    transaction:Buffer.from(serialisedTx).toString("base64"),
+    message: "hi",
     // message: 'Congrats, you recieved the Completion NFT',
   };
   return Response.json(response, { headers: ACTIONS_CORS_HEADERS });
