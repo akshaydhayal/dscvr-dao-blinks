@@ -34,7 +34,8 @@ export default function Page() {
     }
   },[wallet,publicKey])
 
-if(!publicKey) return;
+
+// if(!publicKey) return;
 
   
   
@@ -78,7 +79,9 @@ if(!publicKey) return;
 
 // Fetch the journals for the user
 useEffect(()=>{
-  getJournalsByUser(publicKey)
+  if(publicKey){
+    getJournalsByUser(publicKey)
+  }
 },[programm,publicKey])
 
 
