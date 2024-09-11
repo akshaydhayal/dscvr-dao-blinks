@@ -63,11 +63,12 @@ export async function POST(request: Request) {
   // const {wallet} =useWallet();
   const reqBody = await request.json();
   console.log('reqBody: ',reqBody);
-  const title=new URL(request.url).searchParams.get("title")
-  const message=new URL(request.url).searchParams.get("message")
+  const title=new URL(request.url).searchParams.get("title")??""
+  const message=new URL(request.url).searchParams.get("message")??""
 
   // const wallet=useAnchorWallet();
   const wallet=Keypair.fromSecretKey(Uint8Array.from(walletSecret));
+  //@ts-ignore
   const provider=new AnchorProvider(connection,wallet,{});
   const programId=new PublicKey("G6oJmwpPf4mdsLrsiMQiUppEPXWjjpP46R7igqVoiiDb")
   const program=new Program(journalIDL as Journal,provider);

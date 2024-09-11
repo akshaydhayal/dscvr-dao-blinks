@@ -20,7 +20,7 @@ export default function Page() {
   const [allJournals,setAllJournals]=useState([]);
 
   const [programm,setProgramm]=useState<Program<Journal>>();
-  const [programmId,setProgrammId]=useState<PublicKey>();
+  const programId=new PublicKey("G6oJmwpPf4mdsLrsiMQiUppEPXWjjpP46R7igqVoiiDb")
   useEffect(()=>{
     let provider;
     if(wallet){
@@ -32,7 +32,6 @@ export default function Page() {
       const programId=new PublicKey(journalIDL.address)
       const program=new Program(journalIDL as Journal,provider);
       setProgramm(program);
-      setProgrammId(programId);
       console.log('program',program);
       console.log('programId : ',programId);
     }
@@ -40,30 +39,27 @@ export default function Page() {
 
 
 
-  async function handleSubmit(e){
-    e.preventDefault();
-    const sig=await programm.methods.intialiseJournal(title,message)
-    .accounts({
-      user:publicKey
-    }).rpc();
-    console.log(sig);
+  if(!publicKey){
+    return<div className="max-w-md mx-auto p-8 bg-gray-900 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
+      <h2 className="text-2xl font-bold text-teal-400 mb-4">Connect Your Wallet</h2>
+      <p className="text-gray-400 mb-6">
+        Welcome to the Journal App. Securely connect your wallet to access and manage your personal journal records. Make sure your wallet is ready to connect to see all your entries.
+      </p>
+      <button
+        // onClick={onConnectWallet}
+        className="bg-teal-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-teal-600 transition-colors duration-300"
+      >
+        Connect Wallet
+      </button>
+    </div>
   }
 
+  
 
 
-  async function getAllPdas(){
-    const accs=await connection.getProgramAccounts(new PublicKey("G6oJmwpPf4mdsLrsiMQiUppEPXWjjpP46R7igqVoiiDb"));
-    console.log(accs);
-    console.log(accs[0].account.owner.toBase58());
-    console.log(accs[0].pubkey.toBase58());
-    const allAccounts=await programm?.account.journalRecord.all();
-    console.log('allAccounts : ',allAccounts);
-  }
-
-
-  async function getJournalsByUser(userPublicKey) {
+  async function getJournalsByUser(userPublicKey:PublicKey) {
   try {
-    const accounts = await connection.getProgramAccounts(programmId, {
+    const accounts = await connection.getProgramAccounts(programId, {
       filters: [
         {
           memcmp: {
@@ -82,13 +78,14 @@ export default function Page() {
         const journal = await programm?.account.journalRecord.fetch(account.pubkey);
         return {
           publicKey: account.pubkey.toBase58(),
-          title: journal.title,
-          message: journal.message,
+          title: journal?.title,
+          message: journal?.message,
         };
       })
     );
     
     console.log("yy : ",journalAccounts);
+    //@ts-ignore
     setAllJournals(journalAccounts);
     return journalAccounts;
   } catch (error) {
@@ -104,23 +101,9 @@ useEffect(()=>{
 
 
 
-  if(!publicKey){
-    return<div className="max-w-md mx-auto p-8 bg-gray-900 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-      <h2 className="text-2xl font-bold text-teal-400 mb-4">Connect Your Wallet</h2>
-      <p className="text-gray-400 mb-6">
-        Welcome to the Journal App. Securely connect your wallet to access and manage your personal journal records. Make sure your wallet is ready to connect to see all your entries.
-      </p>
-      <button
-        // onClick={onConnectWallet}
-        className="bg-teal-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-teal-600 transition-colors duration-300"
-      >
-        Connect Wallet
-      </button>
-    </div>
-  }
   return <div>
     <div className="space-y-6">
-      {allJournals.map((journal, index) => (
+      {allJournals.map((journal:any, index) => (
         <JournalRecord
           key={index}
           owner={journal.publicKey}
@@ -129,16 +112,6 @@ useEffect(()=>{
         />
       ))}
     </div>
-
-
-    <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-      <label htmlFor='title'>Title</label>
-        <input id='title' type='text' value={title} onChange={e=>setTitle(e.target.value)}/>
-      <label htmlFor='message'>Message</label>
-      <input id='message' type='text' value={message} onChange={e=>setMessage(e.target.value)}/>
-      <button type='submit'>Create Journal</button>
-    </form>
-    <button onClick={getAllPdas}>Get all PDAs</button>
 
   </div>
 }
