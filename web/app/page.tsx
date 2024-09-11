@@ -34,7 +34,7 @@ export default function Page() {
     }
   },[wallet,publicKey])
 
-
+if(!publicKey) return;
 
   
   
