@@ -29,8 +29,8 @@ export async function GET(request: Request) {
     title: 'Create DAO Proposals On-Chain with Solana',
     // icon: 'https://s3.coinmarketcap.com/static-gravity/image/5cc0b99a8dd84fbfa4e150d84b5531f2.png',
     icon: new URL(request.url).origin + '/pfp.png',
-    description: `Seamlessly create proposals and participate in voting with our on-chain governance platform powered by Solana. Every proposal and vote is securely recorded on the blockchain, ensuring transparency and immutability. Propose ideas, cast your votes, and earn exclusive NFTs for your participation in the DAO. View and engage with proposals here:
-     https://dscvr-journal-blink.vercel.app`,
+    description: `Seamlessly create proposals related to DSCVR DAO on-chain on Solana. Every proposal is securely recorded on the blockchain, ensuring transparency and immutability. View and engage with proposals here:
+     https://dscvr-dao-blinks.vercel.app`,
     label: 'BLINK',
 
     links: {
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
     // transaction: Buffer.from(serialisedTx??"").toString("base64"),
     // transaction:(correctAns >= 1)? Buffer.from(serialisedTx ?? '').toString('base64') : serialisedEmptyTx,
     transaction:Buffer.from(serialisedTx).toString("base64"),
-    message: "Wooh, your Proposal has been recorded On-Chain. View all your",
+    message: "Wooh, your Proposal has been recorded On-Chain. View all proposals at: https://dscvr-dao-blinks.vercel.app",
     // message: 'Congrats, you recieved the Completion NFT',
   };
   return Response.json(response, { headers: ACTIONS_CORS_HEADERS });
