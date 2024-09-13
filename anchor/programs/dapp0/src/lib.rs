@@ -8,18 +8,19 @@ declare_id!("G6oJmwpPf4mdsLrsiMQiUppEPXWjjpP46R7igqVoiiDb");
 pub mod journal{
   use super::*;
 
-  pub fn intialiseJournal(ctx:Context<InitialiseJournal>,title:String,message:String)->Result<()>{
-    let journal_acc=&mut ctx.accounts.journalAcc;
-    journal_acc.owner=ctx.accounts.user.key();
-    journal_acc.title=title;
-    journal_acc.message=message;
+  // pub fn intialiseJournal(ctx:Context<InitialiseJournal>,title:String,message:String)->Result<()>{
+  pub fn intialiseProposal(ctx:Context<InitialiseProposal>,title:String,message:String)->Result<()>{
+    let proposal_acc=&mut ctx.accounts.proposalAcc;
+    proposal_acc.owner=ctx.accounts.user.key();
+    proposal_acc.title=title;
+    proposal_acc.message=message;
     
     Ok(())
   }
 
-  pub fn updateJournal(ctx:Context<UpdateJournal>,title:String,message:String)->Result<()>{
-    let journal_acc=&mut ctx.accounts.journalAcc;
-    journal_acc.message=message;
+  pub fn updateProposal(ctx:Context<UpdateProposal>,title:String,message:String)->Result<()>{
+    let proposal_acc=&mut ctx.accounts.proposalAcc;
+    proposal_acc.message=message;
     Ok(())
 
   }
@@ -27,9 +28,9 @@ pub mod journal{
 
 #[derive(Accounts)]
 #[instruction(title:String)]
-pub struct InitialiseJournal<'info>{
-  #[account(init,seeds=[title.as_bytes(),user.key().as_ref()],bump, payer=user,space=8+JournalRecord::INIT_SPACE)]
-  pub journalAcc:Account<'info,JournalRecord>,
+pub struct InitialiseProposal<'info>{
+  #[account(init,seeds=[title.as_bytes(),user.key().as_ref()],bump, payer=user,space=8+ProposalRecord::INIT_SPACE)]
+  pub proposalAcc:Account<'info,ProposalRecord>,
   #[account(mut)]
   pub user:Signer<'info>,
   pub system_program:Program<'info,System>,
@@ -37,10 +38,10 @@ pub struct InitialiseJournal<'info>{
 
 #[derive(Accounts)]
 #[instruction(title:String)]
-pub struct UpdateJournal<'info>{
+pub struct UpdateProposal<'info>{
   #[account(mut,seeds=[title.as_bytes(),user.key().as_ref()],bump,
-    realloc=8+JournalRecord::INIT_SPACE, realloc::payer=user, realloc::zero=true)]
-  pub journalAcc:Account<'info,JournalRecord>,
+    realloc=8+ProposalRecord::INIT_SPACE, realloc::payer=user, realloc::zero=true)]
+  pub proposalAcc:Account<'info,ProposalRecord>,
   #[account(mut)]
   pub user:Signer<'info>,
   pub system_program:Program<'info, System>,
@@ -49,7 +50,7 @@ pub struct UpdateJournal<'info>{
 
 #[account]
 #[derive(InitSpace)]
-pub struct JournalRecord{
+pub struct ProposalRecord{
   pub owner:Pubkey,
   #[max_len(20)]
   pub title:String,
