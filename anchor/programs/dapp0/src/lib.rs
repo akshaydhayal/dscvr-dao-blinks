@@ -2,10 +2,10 @@
 
 use anchor_lang::prelude::*;
 
-declare_id!("G6oJmwpPf4mdsLrsiMQiUppEPXWjjpP46R7igqVoiiDb");
+declare_id!("4px1Sz7eXme8y7gPUJjwCYsb3BeL6yMRzyLFkyBqjicj");
 
 #[program]
-pub mod journal{
+pub mod dao{
   use super::*;
 
   // pub fn intialiseJournal(ctx:Context<InitialiseJournal>,title:String,message:String)->Result<()>{

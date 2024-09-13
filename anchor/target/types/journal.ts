@@ -14,20 +14,20 @@ export type Journal = {
   },
   "instructions": [
     {
-      "name": "intialiseJournal",
+      "name": "intialiseProposal",
       "discriminator": [
-        215,
-        33,
-        49,
-        238,
-        130,
-        93,
-        77,
-        63
+        212,
+        78,
+        239,
+        159,
+        88,
+        25,
+        177,
+        0
       ],
       "accounts": [
         {
-          "name": "journalAcc",
+          "name": "proposalAcc",
           "writable": true,
           "pda": {
             "seeds": [
@@ -64,20 +64,20 @@ export type Journal = {
       ]
     },
     {
-      "name": "updateJournal",
+      "name": "updateProposal",
       "discriminator": [
-        28,
-        149,
-        175,
-        76,
-        15,
-        92,
-        52,
-        175
+        255,
+        180,
+        3,
+        222,
+        141,
+        207,
+        61,
+        133
       ],
       "accounts": [
         {
-          "name": "journalAcc",
+          "name": "proposalAcc",
           "writable": true,
           "pda": {
             "seeds": [
@@ -116,22 +116,22 @@ export type Journal = {
   ],
   "accounts": [
     {
-      "name": "journalRecord",
+      "name": "proposalRecord",
       "discriminator": [
-        113,
-        152,
-        78,
-        125,
-        8,
-        90,
-        49,
-        121
+        154,
+        180,
+        211,
+        203,
+        232,
+        223,
+        142,
+        147
       ]
     }
   ],
   "types": [
     {
-      "name": "journalRecord",
+      "name": "proposalRecord",
       "type": {
         "kind": "struct",
         "fields": [

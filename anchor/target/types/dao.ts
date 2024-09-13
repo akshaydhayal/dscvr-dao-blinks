@@ -1,7 +1,13 @@
-{
-  "address": "G6oJmwpPf4mdsLrsiMQiUppEPXWjjpP46R7igqVoiiDb",
+/**
+ * Program IDL in camelCase format in order to be used in JS/TS.
+ *
+ * Note that this is only a type helper and is not the actual IDL. The original
+ * IDL can be found at `target/idl/dao.json`.
+ */
+export type Dao = {
+  "address": "4px1Sz7eXme8y7gPUJjwCYsb3BeL6yMRzyLFkyBqjicj",
   "metadata": {
-    "name": "journal",
+    "name": "dao",
     "version": "0.1.0",
     "spec": "0.1.0",
     "description": "Created with Anchor"
@@ -42,7 +48,7 @@
           "signer": true
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -92,7 +98,7 @@
           "signer": true
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -110,7 +116,7 @@
   ],
   "accounts": [
     {
-      "name": "ProposalRecord",
+      "name": "proposalRecord",
       "discriminator": [
         154,
         180,
@@ -125,7 +131,7 @@
   ],
   "types": [
     {
-      "name": "ProposalRecord",
+      "name": "proposalRecord",
       "type": {
         "kind": "struct",
         "fields": [
@@ -149,4 +155,4 @@
       }
     }
   ]
-}
+};

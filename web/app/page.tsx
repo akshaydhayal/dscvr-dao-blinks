@@ -5,8 +5,10 @@ import { useAnchorWallet, useConnection, useWallet } from '@solana/wallet-adapte
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 // import Dapp0IDL from '../target/idl/dapp0.json';
 // import type { Dapp0 } from '../target/types/dapp0';
-import journalIDL from '../../anchor/target/idl/journal.json';
-import type { Journal } from '../../anchor/target/types/journal';
+// import journalIDL from '../../anchor/target/idl/journal.json';
+import daoIDL from '../../anchor/target/idl/dao.json';
+// import type { Journal } from '../../anchor/target/types/dao';
+import type { Dao } from '../../anchor/target/types/dao';
 import { useEffect, useState } from 'react';
 
 export default function Page() {
@@ -16,8 +18,10 @@ export default function Page() {
 
   const [allJournals,setAllJournals]=useState([]);
 
-  const [programm,setProgramm]=useState<Program<Journal>>();
-  const programId=new PublicKey("G6oJmwpPf4mdsLrsiMQiUppEPXWjjpP46R7igqVoiiDb")
+  // const [programm,setProgramm]=useState<Program<Journal>>();
+  const [programm,setProgramm]=useState<Program<Dao>>();
+  // const programId=new PublicKey("G6oJmwpPf4mdsLrsiMQiUppEPXWjjpP46R7igqVoiiDb")
+  const programId=new PublicKey("4px1Sz7eXme8y7gPUJjwCYsb3BeL6yMRzyLFkyBqjicj")
   useEffect(()=>{
     let provider;
     if(wallet){
@@ -27,7 +31,8 @@ export default function Page() {
         provider=new AnchorProvider(connection,wallet,{});
       }
       // const programId=new PublicKey(journalIDL.address)
-      const program=new Program(journalIDL as Journal,provider);
+      // const program=new Program(journalIDL as Journal,provider);
+      const program=new Program(daoIDL as Dao,provider);
       setProgramm(program);
       console.log('program',program);
       console.log('programId : ',programId);
@@ -59,7 +64,8 @@ export default function Page() {
     const journalAccounts = await Promise.all(
       accounts.map(async (account) => {
         // Use Anchor's fetch method to decode the journal data
-        const journal = await programm?.account.journalRecord.fetch(account.pubkey);
+        // const journal = await programm?.account.journalRecord.fetch(account.pubkey);
+        const journal = await programm?.account.proposalRecord.fetch(account.pubkey);
         return {
           publicKey: account.pubkey.toBase58(),
           title: journal?.title,
