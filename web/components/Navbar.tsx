@@ -7,7 +7,7 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between px-4 py-2">
         {/* Website Name */}
         <div className="text-2xl font-semibold">
-          Daily Diary
+          DSCVR DAO
         </div>
         
         {/* Wallet Button */}

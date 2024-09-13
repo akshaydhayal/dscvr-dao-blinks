@@ -46,49 +46,87 @@ export default function Page() {
   
   
 
-  async function getJournalsByUser(userPublicKey:PublicKey) {
+//   async function getJournalsByUser(userPublicKey:PublicKey) {
+//   try {
+//     const accounts = await connection.getProgramAccounts(programId, {
+//       filters: [
+//         {
+//           memcmp: {
+//             offset: 8, // The offset where the `owner` field starts in your JournalRecord account
+//             bytes: userPublicKey.toBase58(),
+//           },
+//         },
+//       ],
+//     });
+
+//     console.log("xxx : ",accounts);
+
+//     const journalAccounts = await Promise.all(
+//       accounts.map(async (account) => {
+//         // Use Anchor's fetch method to decode the journal data
+//         // const journal = await programm?.account.journalRecord.fetch(account.pubkey);
+//         const journal = await programm?.account.proposalRecord.fetch(account.pubkey);
+//         return {
+//           publicKey: account.pubkey.toBase58(),
+//           title: journal?.title,
+//           message: journal?.message,
+//         };
+//       })
+//     );
+    
+//     console.log("yy : ",journalAccounts);
+//     //@ts-ignore
+//     setAllJournals(journalAccounts);
+//     return journalAccounts;
+//   } catch (error) {
+//     console.error("Error fetching journals:", error);
+//   }
+// }
+
+// // Fetch the journals for the user
+// useEffect(()=>{
+//   if(publicKey){
+//     getJournalsByUser(publicKey)
+//   }
+// },[programm,publicKey])
+
+
+async function getAllProgramAccounts() {
   try {
-    const accounts = await connection.getProgramAccounts(programId, {
-      filters: [
-        {
-          memcmp: {
-            offset: 8, // The offset where the `owner` field starts in your JournalRecord account
-            bytes: userPublicKey.toBase58(),
-          },
-        },
-      ],
-    });
+    // Fetch all accounts for the program
+    const accounts = await connection.getProgramAccounts(programId);
 
-    console.log("xxx : ",accounts);
+    console.log("Fetched accounts: ", accounts);
 
-    const journalAccounts = await Promise.all(
+    const allAccounts = await Promise.all(
       accounts.map(async (account) => {
-        // Use Anchor's fetch method to decode the journal data
-        // const journal = await programm?.account.journalRecord.fetch(account.pubkey);
-        const journal = await programm?.account.proposalRecord.fetch(account.pubkey);
+        // Use Anchor's fetch method to decode the proposal data
+        const proposal = await programm?.account.proposalRecord.fetch(account.pubkey);
+
         return {
           publicKey: account.pubkey.toBase58(),
-          title: journal?.title,
-          message: journal?.message,
+          title: proposal?.title,
+          message: proposal?.message,
         };
       })
     );
-    
-    console.log("yy : ",journalAccounts);
+
+    console.log("Processed accounts: ", allAccounts);
     //@ts-ignore
-    setAllJournals(journalAccounts);
-    return journalAccounts;
+    setAllJournals(allAccounts);
+    return allAccounts;
   } catch (error) {
-    console.error("Error fetching journals:", error);
+    console.error("Error fetching accounts:", error);
   }
 }
 
-// Fetch the journals for the user
-useEffect(()=>{
-  if(publicKey){
-    getJournalsByUser(publicKey)
+// Fetch all program accounts on component load
+useEffect(() => {
+  if (programm) {
+    getAllProgramAccounts();
   }
-},[programm,publicKey])
+}, [programm]);
+
 
 
 
@@ -96,7 +134,7 @@ if(!publicKey){
   return<div className="max-w-md mx-auto p-8 bg-gray-900 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
     <h2 className="text-2xl font-bold text-teal-400 mb-4">Connect Your Wallet</h2>
     <p className="text-gray-400 mb-6">
-      Welcome to the Journal App. Securely connect your wallet to access and manage your personal journal records. Make sure your wallet is ready to connect to see all your entries.
+      Welcome to the DSCVR DAO. Securely connect your wallet to access and manage all Proposals. Make sure your wallet is ready to connect to see all your entries.
     </p>
     <button
       // onClick={onConnectWallet}
@@ -112,7 +150,7 @@ if(!publicKey){
     <div className="h-[90vh] flex justify-center">
       <div className='w-3/4 pt-2  space-y-6 overflow-auto'>
       {allJournals.length==0 && <div className='w-full h-full flex justify-center pt-24'>
-        <p className='text-xl font-medium'>You have no Journal Records On-Chain. Create a Record at the dscvr blink first:  </p>
+        <p className='text-xl font-medium'>There are no Proposals currently live On-Chain. Create a Proposal at the dscvr blink first:  </p>
         </div>}
       {allJournals.map((journal:any, index) => (
         <JournalRecord
