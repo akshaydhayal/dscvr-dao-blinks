@@ -152,6 +152,8 @@ if(!publicKey){
       {allJournals.length==0 && <div className='w-full h-full flex justify-center pt-24'>
         <p className='text-xl font-medium'>There are no Proposals currently live On-Chain. Create a Proposal at the dscvr blink first:  </p>
         </div>}
+      {/* <p className='text-2xl font-semibold text-green-400 text-center'>All Live DAO Proposals:</p> */}
+      <p className='text-3xl font-semibold text-blue-400 text-center font-mono'>All Live DAO Proposals:</p>
       {allJournals.map((journal:any, index) => (
         <JournalRecord
         key={index}
